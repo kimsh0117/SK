@@ -11,7 +11,20 @@ const theme = {
   colors: {
     transparent: 'transparent',
     current: 'currentColor',
-
+    primary: {
+      default: colors.primary.default,
+      hover: colors.primary.hover,
+      active: colors.primary.active,
+    },
+    disabled: {
+      background: colors.disabled.background,
+      text: colors.disabled.text,
+      hover: colors.disabled.hover,
+    },
+    text: {
+      placeholder: colors.text.placeholder,
+    },
+    error: colors.error,
     black: colors.black,
     white: colors.white,
     gray: colors.coolGray,
@@ -60,13 +73,6 @@ const theme = {
     80: '20rem',
     96: '24rem',
   },
-  animation: {
-    none: 'none',
-    spin: 'spin 1s linear infinite',
-    ping: 'ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
-    pulse: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-    bounce: 'bounce 1s infinite',
-  },
   fontFamily: {
     sans: [
       'ui-sans-serif',
@@ -83,6 +89,8 @@ const theme = {
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
       '"Noto Color Emoji"',
+      '"Open Sans"',
+      '"SF UI Display"',
     ],
     serif: ['ui-serif', 'Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
     mono: [
@@ -122,33 +130,33 @@ const theme = {
     extrabold: '800',
     black: '900',
   },
-  keyframes: {
-    spin: {
-      to: {
-        transform: 'rotate(360deg)',
-      },
-    },
-    ping: {
-      '75%, 100%': {
-        transform: 'scale(2)',
-        opacity: '0',
-      },
-    },
-    pulse: {
-      '50%': {
-        opacity: '.5',
-      },
-    },
-    bounce: {
-      '0%, 100%': {
-        transform: 'translateY(-25%)',
-        animationTimingFunction: 'cubic-bezier(0.8,0,1,1)',
-      },
-      '50%': {
-        transform: 'none',
-        animationTimingFunction: 'cubic-bezier(0,0,0.2,1)',
-      },
-    },
+  borderRadius: {
+    none: '0px',
+    sm: '0.125rem',
+    DEFAULT: '0.25rem',
+    md: '0.375rem',
+    lg: '0.5rem',
+    xl: '0.75rem',
+    '2xl': '1rem',
+    '3xl': '1.5rem',
+    full: '9999px',
+  },
+  borderWidth: {
+    DEFAULT: '1px',
+    0: '0px',
+    2: '2px',
+    4: '4px',
+    8: '8px',
+  },
+  boxShadow: {
+    sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+    DEFAULT: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+    md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+    lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+    xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+    '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+    inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+    none: 'none',
   },
 }
 

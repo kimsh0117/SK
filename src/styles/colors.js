@@ -3,6 +3,20 @@ let warned = false
 const colors = {
   black: '#000',
   white: '#fff',
+  primary: {
+    default: '#0086A8',
+    hover: '#007693',
+    active: '#00657E',
+  },
+  error: '#EB5E55',
+  disabled: {
+    background: '#E3E3E3',
+    hover: '#FAFAFA',
+    text: '#828282',
+  },
+  text: {
+    placeholder: '#CDCAD0',
+  },
   rose: {
     50: '#fff1f2',
     100: '#ffe4e6',
