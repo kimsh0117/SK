@@ -1,22 +1,19 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import arrow from '../../assets/image/down_arrow.png'
 
 interface DropdownPropsType {
   label?: string
-  list: string[]
   error?: boolean
+  onClick?: () => void
+  isListOpen: boolean
+  selected?: string | null
 }
 
-const StyledContainer = styled.div`
+const StyledButton = styled.button<{ isListOpen: boolean; error?: boolean }>`
+  position: relative;
   width: 100%;
-  position: relative;
-`
-const StyledHeader = styled.button<{ isListOpen: boolean; error?: boolean }>`
-  position: relative;
-  display: block;
   height: 50px;
-  width: 300px;
   background-color: ${props => props.theme.colors.white};
   border-radius: ${props => props.theme.borderRadius.lg};
   border: 2px solid
@@ -50,6 +47,7 @@ const StyledLabel = styled.div<{ isListOpen: boolean; error?: boolean }>`
       ? props.theme.colors.error
       : '#353238'};
 `
+// 이놈만 따로 익스포트 해서 사용하는건 괜찮은 방법일까?
 const StyledArrow = styled.img<{ isListOpen: boolean }>`
   transform: ${props => (props.isListOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
   /* transition: transform 0.3s linear; */
@@ -63,70 +61,24 @@ const StyledErrorMessage = styled.div`
   font-size: ${props => props.theme.fontSize.xs[0]};
 `
 
-const StyledList = styled.ul`
-  position: absolute;
-  top: 60px;
-  z-index: 999;
-  padding: 0;
-  margin: 0;
-  width: 297px;
-  list-style: none;
-  border: 2px solid ${props => props.theme.colors.disabled.background};
-  border-radius: ${props => props.theme.borderRadius.lg};
-  box-shadow: 0px 5px 20px rgba(53, 50, 56, 0.14);
-  background-color: ${props => props.theme.colors.white};
-`
-const StyledItem = styled.li`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  font-family: ${props => props.theme.fontFamily.sans[14]};
-  font-size: ${props => props.theme.fontSize.sm[0]};
-  &:not(:last-child) {
-    border-bottom: 2px solid ${props => props.theme.colors.disabled.background};
-  }
-  :hover {
-    background-color: ${props => props.theme.colors.disabled.hover};
-  }
-`
-
-const Dropdown: React.FC<DropdownPropsType> = ({ label, error, list }) => {
-  const [isListOpen, OpenList] = useState(false)
-  const toggleDropdown = (): void => {
-    OpenList(!isListOpen)
-  }
-  const [, setItem] = useState(label)
-  const selectItem = (item: string): void => {
-    setItem(item)
-    OpenList(!isListOpen)
-  }
+const DropdownBtn: React.FC<DropdownPropsType> = ({
+  label,
+  error,
+  onClick,
+  isListOpen,
+  selected,
+}) => {
   return (
-    <StyledContainer>
-      <StyledHeader onClick={toggleDropdown} isListOpen={isListOpen} error={error}>
+    <>
+      <StyledButton onClick={onClick} isListOpen={isListOpen} error={error}>
         <StyledLabel isListOpen={isListOpen} error={error}>
-          {label}
+          {selected ? selected : label}
         </StyledLabel>
         <StyledArrow src={arrow} isListOpen={isListOpen}></StyledArrow>
-      </StyledHeader>
+      </StyledButton>
       {error && <StyledErrorMessage>Обязательное поле</StyledErrorMessage>}
-      {isListOpen && (
-        <StyledList>
-          {list.map((item, index) => (
-            <StyledItem
-              key={index}
-              onClick={e => {
-                e.stopPropagation()
-                selectItem(item)
-              }}
-            >
-              {item}
-            </StyledItem>
-          ))}
-        </StyledList>
-      )}
-    </StyledContainer>
+    </>
   )
 }
 
-export default styled(Dropdown)``
+export default styled(DropdownBtn)``

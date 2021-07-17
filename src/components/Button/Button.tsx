@@ -14,7 +14,8 @@ const StyledButton = styled.button`
   font-weight: ${props => props.theme.fontWeight.semibold};
   font-size: ${props => props.theme.fontSize.sm[0]};
   height: 50px;
-  width: 156px;
+  width: 156px; // 임시
+  width: 100%;
   border: ${props => props.theme.borderWidth[0]};
   border-radius: ${props => props.theme.borderRadius.lg};
   cursor: pointer;
@@ -32,6 +33,7 @@ const StyledButton = styled.button`
 
   &:disabled {
     background-color: ${props => props.theme.colors.disabled.background};
+    cursor: not-allowed;
   }
 `
 

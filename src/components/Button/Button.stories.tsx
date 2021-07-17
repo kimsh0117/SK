@@ -1,37 +1,23 @@
-import React from 'react'
+import { ComponentStory, ComponentMeta } from '@storybook/react'
 import Button from './Button'
-import { ThemeProvider } from 'styled-components'
-import theme from '../../styles/theme'
 
 export default {
   title: 'components|Button',
   component: Button,
+} as ComponentMeta<typeof Button>
+
+const Template: ComponentStory<typeof Button> = args => <Button {...args}>Пример текста</Button>
+
+export const Primary = Template.bind({})
+
+export const Disabled = Template.bind({})
+Disabled.args = {
+  disabled: true,
+  loading: false,
 }
 
-export const button = () => {
-  return (
-    <ThemeProvider theme={theme}>
-      <Button>Пример текста</Button>
-    </ThemeProvider>
-  )
-}
-
-export const disabledButton = () => {
-  return (
-    <ThemeProvider theme={theme}>
-      <Button disabled={true} loading={false}>
-        Пример текста
-      </Button>
-    </ThemeProvider>
-  )
-}
-
-export const loadingButton = () => {
-  return (
-    <ThemeProvider theme={theme}>
-      <Button disabled={false} loading={true}>
-        Пример текста
-      </Button>
-    </ThemeProvider>
-  )
+export const Loading = Template.bind({})
+Loading.args = {
+  disabled: false,
+  loading: true,
 }

@@ -1,27 +1,53 @@
-import React from 'react'
-import Dropdown from './Dropdown'
-import { ThemeProvider } from 'styled-components'
-import theme from '../../styles/theme'
+import React, { useState } from 'react'
+import { ComponentStory, ComponentMeta } from '@storybook/react'
+import Dropdown from './DropdownBtn'
+import Menu from './Menu'
+import MenuItem from './MenuItem'
+import cities from '../../lib/api/cities.json'
 
 export default {
   title: 'components|Dropdown',
   component: Dropdown,
-}
+} as ComponentMeta<typeof Dropdown>
 
-export const select = () => {
-  const list = ['Пример текста1', 'Пример текста2', 'Пример текста3', 'Пример текста4']
+const Template: ComponentStory<typeof Dropdown> = args => {
+  const [isListOpen, OpenList] = useState(false)
+  const toggleDropdown = (): void => {
+    OpenList(!isListOpen)
+  }
+  const [selected, setItem] = useState<string | null>(null)
+  const selectItem = (item: string): void => {
+    setItem(item)
+    OpenList(!isListOpen)
+  }
   return (
-    <ThemeProvider theme={theme}>
-      <Dropdown label='От куда узнали про нас?' list={list}></Dropdown>
-    </ThemeProvider>
+    <>
+      <Dropdown
+        {...args}
+        isListOpen={isListOpen}
+        onClick={toggleDropdown}
+        selected={selected}
+      ></Dropdown>
+      {isListOpen && (
+        <Menu>
+          {cities.map((item, index) => (
+            <MenuItem key={index} onClick={() => selectItem(item.name)}>
+              {item.name}
+            </MenuItem>
+          ))}
+        </Menu>
+      )}
+    </>
   )
 }
 
-export const selectError = () => {
-  const list = ['Пример текста1', 'Пример текста2', 'Пример текста3', 'Пример текста4']
-  return (
-    <ThemeProvider theme={theme}>
-      <Dropdown label='От куда узнали про нас?' list={list} error={true}></Dropdown>
-    </ThemeProvider>
-  )
+export const Primary = Template.bind({})
+Primary.args = {
+  label: 'От куда узнали про нас?',
+}
+
+export const ErrorDropdown = Template.bind({})
+ErrorDropdown.args = {
+  label: 'От куда узнали про нас?',
+  error: true,
 }

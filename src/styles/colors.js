@@ -15,6 +15,7 @@ const colors = {
     text: '#828282',
   },
   text: {
+    default: '#353238',
     placeholder: '#CDCAD0',
   },
   rose: {

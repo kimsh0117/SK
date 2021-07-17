@@ -9,19 +9,22 @@ interface InputPropsType {
 
 const StyledFormGroup = styled.div`
   position: relative;
-  display: block;
+  width: 100%;
 `
 const StyledInput = styled.input<{ error?: boolean }>`
+  box-sizing: border-box;
+  width: 100%;
   height: 50px;
   border: 2px solid
     ${props => (props.error ? props.theme.colors.error : props.theme.colors.disabled.background)};
   border-radius: ${props => props.theme.borderRadius.lg};
   font-family: ${props => props.theme.fontFamily.sans[14]};
   font-weight: ${props => props.theme.fontWeight.normal};
-  padding: 0 ${props => props.theme.spacing[3.5]};
+  padding: 0 15px;
 
   ::placeholder {
     font-size: ${props => props.theme.fontSize.sm[0]};
+    font-weight: ${props => props.theme.fontWeight.normal};
     color: ${props => props.theme.colors.text.placeholder};
   }
 
@@ -35,12 +38,13 @@ const StyledInput = styled.input<{ error?: boolean }>`
 const StyledLabel = styled.label<{ error?: boolean }>`
   position: absolute;
   top: -6px;
-  left: 10px;
+  left: 12px;
   color: ${props => (props.error ? props.theme.colors.error : props.theme.colors.disabled.text)};
   font-size: ${props => props.theme.fontSize.xs[0]};
   font-family: ${props => props.theme.fontFamily.sans[15]};
   background-color: ${props => props.theme.colors.white};
   padding: 0 ${props => props.theme.spacing[1.5]};
+  letter-spacing: 0.25px;
 
   ${StyledInput}:focus + & {
     color: ${props =>
@@ -60,12 +64,8 @@ const StyledErrorMessage = styled.div`
 const Input: React.FC<InputPropsType> = ({ label, placeholder, error }) => {
   return (
     <StyledFormGroup>
-      {error ? (
-        <StyledInput placeholder={placeholder} error></StyledInput>
-      ) : (
-        <StyledInput placeholder={placeholder}></StyledInput>
-      )}
-      {error ? <StyledLabel error>{label}</StyledLabel> : <StyledLabel>{label}</StyledLabel>}
+      <StyledInput placeholder={placeholder} error={error}></StyledInput>
+      <StyledLabel error={error}>{label}</StyledLabel>
       {error && <StyledErrorMessage>Обязательное поле</StyledErrorMessage>}
     </StyledFormGroup>
   )
