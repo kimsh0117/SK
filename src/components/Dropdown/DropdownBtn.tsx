@@ -4,13 +4,13 @@ import arrow from '../../assets/image/down_arrow.png'
 
 interface DropdownPropsType {
   label?: string
-  error?: boolean
+  error?: any
   onClick?: () => void
   isListOpen: boolean
   selected?: string | null
 }
 
-const StyledButton = styled.button<{ isListOpen: boolean; error?: boolean }>`
+const StyledButton = styled.button<{ isListOpen: boolean; error?: any }>`
   position: relative;
   width: 100%;
   height: 50px;
@@ -32,7 +32,7 @@ const StyledButton = styled.button<{ isListOpen: boolean; error?: boolean }>`
   font-weight: ${props => props.theme.fontWeight.normal};
   font-size: ${props => props.theme.fontSize.sm[0]};
 `
-const StyledLabel = styled.div<{ isListOpen: boolean; error?: boolean }>`
+const StyledLabel = styled.div<{ isListOpen: boolean; error?: any }>`
   position: ${props => (props.isListOpen ? 'absolute' : 'static')};
   top: -9px;
   left: 10px;
@@ -52,14 +52,6 @@ const StyledArrow = styled.img<{ isListOpen: boolean }>`
   transform: ${props => (props.isListOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
   /* transition: transform 0.3s linear; */
 `
-const StyledErrorMessage = styled.div`
-  padding: 0 ${props => props.theme.spacing[6]};
-  color: ${props => props.theme.colors.error};
-  margin-top: ${props => props.theme.spacing[2]};
-  font-family: ${props => props.theme.fontFamily.sans[14]};
-  font-weight: ${props => props.theme.fontWeight.normal};
-  font-size: ${props => props.theme.fontSize.xs[0]};
-`
 
 const DropdownBtn: React.FC<DropdownPropsType> = ({
   label,
@@ -67,18 +59,13 @@ const DropdownBtn: React.FC<DropdownPropsType> = ({
   onClick,
   isListOpen,
   selected,
-}) => {
-  return (
-    <>
-      <StyledButton onClick={onClick} isListOpen={isListOpen} error={error}>
-        <StyledLabel isListOpen={isListOpen} error={error}>
-          {selected ? selected : label}
-        </StyledLabel>
-        <StyledArrow src={arrow} isListOpen={isListOpen}></StyledArrow>
-      </StyledButton>
-      {error && <StyledErrorMessage>Обязательное поле</StyledErrorMessage>}
-    </>
-  )
-}
+}) => (
+  <StyledButton onClick={onClick} isListOpen={isListOpen} error={error}>
+    <StyledLabel isListOpen={isListOpen} error={error}>
+      {selected ? selected : label}
+    </StyledLabel>
+    <StyledArrow src={arrow} isListOpen={isListOpen}></StyledArrow>
+  </StyledButton>
+)
 
 export default styled(DropdownBtn)``

@@ -7,18 +7,21 @@ import { store } from './store'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 import { Router } from 'react-router-dom'
+import { HelmetProvider } from 'react-helmet-async'
 import theme from './styles/theme'
 import history from './lib/routes/history'
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <Router history={history}>
-        <ThemeProvider theme={theme}>
-          <App />
-        </ThemeProvider>
-      </Router>
-    </Provider>
+    <HelmetProvider>
+      <Provider store={store}>
+        <Router history={history}>
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
+        </Router>
+      </Provider>
+    </HelmetProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 )

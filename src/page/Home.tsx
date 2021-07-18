@@ -1,11 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import logo from '../assets/image/logo.png'
-import { Input, Button } from '../components'
+import { useForm, SubmitHandler } from 'react-hook-form'
+
+import { useSelector } from 'react-redux'
+import { postApplication } from '../store/applicationSlice'
+import { RootState, useAppThunkDispatch } from '../store'
+
+import { Input, Button, ErrorMessage } from '../components'
 import { DropdownBtn, MenuItem, Menu } from '../components/Dropdown'
+
 import cities from '../lib/api/cities.json'
 import sources from '../lib/api/sources.json'
 import arrow from '../assets/image/down_arrow.png'
+import logo from '../assets/image/logo.png'
+
+export interface IFormValue {
+  'Ваше имя *': string
+  'Номер телефона *': string
+  'E-mail *': string
+  'Ссылка на профиль *': string
+  'Выберите город *': string
+  'Название организации/студии': string
+  Получатель: string
+  'От куда узнали про нас?': string
+}
 
 // container
 const Container = styled.div`
@@ -14,8 +32,10 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   padding: 0;
+
+  // responsive
   @media (max-width: ${props => props.theme.screens['2xl']}) {
-    padding: 0 50px;
+    padding: 100px 50px;
   }
 `
 // inner-container
@@ -74,9 +94,10 @@ const RightContent = styled.div`
 `
 
 // two column grid
-const TwoColumnRow = styled.div`
+const TwoColumnTwoRow = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr auto;
   column-gap: 20px;
   width: 100%;
   margin-bottom: 25px;
@@ -96,37 +117,49 @@ const StyledArrow = styled.img<{ isListOpen?: boolean }>`
   margin-left: 8px;
 `
 const Home: React.FC = () => {
-  // additional field state
-  const [isAdditionalFieldOpen, OpenAdditionalField] = useState(false)
-  // additional field method
-  const toggleAdditionalFieldDropdown = (): void => {
-    OpenAdditionalField(!isAdditionalFieldOpen)
-  }
+  // use Dispatch
+  const dispatch = useAppThunkDispatch()
+  const { loading } = useSelector((state: RootState) => state.application)
+  // react-hook-form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    setValue,
+    getValues,
+    trigger,
+    reset,
+  } = useForm<IFormValue>({ mode: 'onChange', reValidateMode: 'onChange' })
 
   // cities drop-down toggle state
   const [isCitiesListOpen, OpenCitiesList] = useState(false)
-  const toggleCitiesDropdown = (): void => {
-    OpenCitiesList(!isCitiesListOpen)
-  }
-
-  // cities drop-down selected state
-  const [selectedCity, setCitiesItem] = useState<string | null>(null)
-  const selectCitiesItem = (item: string): void => {
-    setCitiesItem(item)
-    OpenCitiesList(!isCitiesListOpen)
-  }
-
+  // additional field drop-down state
+  const [isAdditionalFieldOpen, OpenAdditionalField] = useState(false)
   // source drop-down toggle state
   const [isSourceListOpen, OpenSourceList] = useState(false)
-  const toggleSourceDropdown = (): void => {
-    OpenSourceList(!isSourceListOpen)
-  }
 
-  // source drop-down selected state
-  const [selectedSource, setSourceItem] = useState<string | null>(null)
-  const selectSourceItem = (item: string): void => {
-    setSourceItem(item)
-    OpenSourceList(!isSourceListOpen)
+  useEffect(() => {
+    register('Выберите город *', {
+      required: true,
+    })
+  }, [register])
+
+  // !!!!!!!-Submit-!!!!!!!
+  const onSubmit: SubmitHandler<IFormValue> = data => {
+    dispatch(postApplication(data))
+      .unwrap()
+      .then(() => {
+        reset({
+          'Ваше имя *': '',
+          'Номер телефона *': '',
+          'E-mail *': '',
+          'Ссылка на профиль *': '',
+          'Выберите город *': '',
+          'Название организации/студии': '',
+          Получатель: '',
+          'От куда узнали про нас?': '',
+        })
+      })
   }
   return (
     <Container>
@@ -157,53 +190,166 @@ const Home: React.FC = () => {
 
         {/* Right Side */}
         <RightContent>
-          <TwoColumnRow>
-            <Input placeholder='Иван' label='Ваше имя *'></Input>
-            <Input placeholder='+7 (000) 000-00-00' label='Номер телефона *'></Input>
-          </TwoColumnRow>
-          <TwoColumnRow>
-            <Input placeholder='example@skdesign.ru' label='E-mail *'></Input>
-            <Input placeholder='instagram.com/skdesign' label='Ссылка на профиль *'></Input>
-          </TwoColumnRow>
+          <TwoColumnTwoRow>
+            {/* Name Field*/}
+            <Input
+              placeholder='Иван'
+              label='Ваше имя *'
+              register={register}
+              rules={{
+                required: { value: true, message: 'поля должна не пустое' },
+                minLength: { value: 2, message: 'поле имеет 2 или более символов' },
+              }}
+              error={errors['Ваше имя *']?.message}
+            ></Input>
+            {/* Phone Number Field */}
+            <Input
+              placeholder='+7 (000) 000-00-00'
+              label='Номер телефона *'
+              register={register}
+              error={errors['Номер телефона *']?.message}
+              rules={{
+                required: { value: true, message: 'поля должна не пустое' },
+                pattern: {
+                  value: /^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/,
+                  message: 'номер заполнен корректно и полностью',
+                },
+              }}
+            ></Input>
+            <div>
+              {/* -Name- "поле не пустое" Error Message */}
+              {errors['Ваше имя *']?.type === 'required' && (
+                <ErrorMessage>{errors['Ваше имя *']?.message}</ErrorMessage>
+              )}
+              {/* -Name- "поле имеет 2 или более символов" Error Message */}
+              {errors['Ваше имя *']?.type === 'minLength' && (
+                <ErrorMessage>{errors['Ваше имя *']?.message}</ErrorMessage>
+              )}
+            </div>
+            <div>
+              {/* -Phone-  "поле не пустое" Error Message */}
+              {errors['Номер телефона *']?.type === 'required' && (
+                <ErrorMessage>{errors['Номер телефона *']?.message}</ErrorMessage>
+              )}
+              {/* -Phone-  "номер заполнен корректно и полностью" Error Message */}
+              {errors['Номер телефона *']?.type === 'pattern' && (
+                <ErrorMessage>{errors['Номер телефона *']?.message}</ErrorMessage>
+              )}
+            </div>
+          </TwoColumnTwoRow>
+          <TwoColumnTwoRow>
+            {/* E-mail Field */}
+            <Input
+              placeholder='example@skdesign.ru'
+              label='E-mail *'
+              register={register}
+              error={errors['E-mail *']?.message}
+              rules={{
+                required: { value: true, message: 'поля должна не пустое' },
+                pattern: {
+                  value:
+                    /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+                  message: 'заполнен корректно и полностью',
+                },
+              }}
+            ></Input>
+            {/* Profile Link Field */}
+            <Input
+              placeholder='instagram.com/skdesign'
+              label='Ссылка на профиль *'
+              error={errors['Ссылка на профиль *']?.message}
+              register={register}
+              rules={{
+                required: { value: true, message: 'поля должна не пустое' },
+                minLength: { value: 3, message: 'поле имеет 3 или более символов' },
+              }}
+            ></Input>
+            <div>
+              {/* -Email- "поле не пустое" Error Message */}
+              {errors['E-mail *']?.type === 'required' && (
+                <ErrorMessage>{errors['E-mail *']?.message}</ErrorMessage>
+              )}
+              {/* -Email- "заполнен корректно и полностью" Error Message */}
+              {errors['E-mail *']?.type === 'pattern' && (
+                <ErrorMessage>{errors['E-mail *']?.message}</ErrorMessage>
+              )}
+            </div>
+            <div>
+              {/* -Profile Link- "поле не пустое" Error Message */}
+              {errors['Ссылка на профиль *']?.type === 'required' && (
+                <ErrorMessage>{errors['Ссылка на профиль *']?.message}</ErrorMessage>
+              )}
+              {/* -Profile Link- "поле имеет 3 или более символов" Error Message */}
+              {errors['Ссылка на профиль *']?.type === 'minLength' && (
+                <ErrorMessage>{errors['Ссылка на профиль *']?.message}</ErrorMessage>
+              )}
+            </div>
+          </TwoColumnTwoRow>
           <div style={{ marginBottom: '25px', position: 'relative' }}>
+            {/* City */}
             <DropdownBtn
               label='Выберите город *'
               isListOpen={isCitiesListOpen}
-              selected={selectedCity}
-              onClick={toggleCitiesDropdown}
+              selected={getValues('Выберите город *')}
+              onClick={() => OpenCitiesList(!isCitiesListOpen)}
+              error={errors['Выберите город *']?.message}
             ></DropdownBtn>
+            {/* -City- "поле не пустое" Error Message */}
+            {errors['Выберите город *']?.type === 'required' && (
+              <ErrorMessage>поля должна не пустое</ErrorMessage>
+            )}
             {isCitiesListOpen && (
               <Menu>
                 {cities.map((city, index) => (
-                  <MenuItem key={index} onClick={() => selectCitiesItem(city.name)}>
+                  <MenuItem
+                    key={index}
+                    onClick={() => {
+                      setValue('Выберите город *', city.name)
+                      trigger('Выберите город *')
+                      OpenCitiesList(!isCitiesListOpen) // close drop down
+                    }}
+                  >
                     {city.name}
                   </MenuItem>
                 ))}
               </Menu>
             )}
           </div>
-          <Input label='Название организации/студии' placeholder='SK Design'></Input>
-          <AdditionalField onClick={toggleAdditionalFieldDropdown}>
+          {/* Organization */}
+          <Input
+            label='Название организации/студии'
+            placeholder='SK Design'
+            register={register}
+          ></Input>
+          <AdditionalField onClick={() => OpenAdditionalField(!isAdditionalFieldOpen)}>
             Показать дополнительные поля
             <StyledArrow src={arrow} isListOpen={isAdditionalFieldOpen}></StyledArrow>
           </AdditionalField>
           {isAdditionalFieldOpen && (
             <div style={{ marginBottom: '25px' }}>
-              <Input label='Полуучатель' placeholder='ФИО'></Input>
+              {/* Recipient */}
+              <Input label='Получатель' placeholder='ФИО' register={register}></Input>
             </div>
           )}
           {isAdditionalFieldOpen && (
             <div style={{ marginBottom: '25px', position: 'relative' }}>
+              {/* Where did you hear about us from? */}
               <DropdownBtn
                 label='От куда узнали про нас?'
                 isListOpen={isSourceListOpen}
-                selected={selectedSource}
-                onClick={toggleSourceDropdown}
+                selected={getValues('От куда узнали про нас?')}
+                onClick={() => OpenSourceList(!isSourceListOpen)}
               ></DropdownBtn>
               {isSourceListOpen && (
                 <Menu>
                   {sources.map((source, index) => (
-                    <MenuItem key={index} onClick={() => selectSourceItem(source)}>
+                    <MenuItem
+                      key={index}
+                      onClick={() => {
+                        setValue('От куда узнали про нас?', source)
+                        OpenSourceList(!isSourceListOpen)
+                      }}
+                    >
                       {source}
                     </MenuItem>
                   ))}
@@ -211,12 +357,13 @@ const Home: React.FC = () => {
               )}
             </div>
           )}
-          <Button disabled={true}>Отправить заявку</Button>
+          <Button disabled={!isValid || loading} onClick={handleSubmit(onSubmit)} loading={loading}>
+            Отправить заявку
+          </Button>
         </RightContent>
       </InnerContainer>
     </Container>
   )
 }
 export default Home
-// 현재 크롬에서만 오픈 산스 적용 됨
-// 다른 사파리, 파이어폭스에서 적용 되도록 다운 및 적용해야 함
+// 에러시 라벨 색 제대로 렌더링 되도록 고치기

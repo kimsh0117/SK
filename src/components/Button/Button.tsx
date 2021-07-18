@@ -5,6 +5,7 @@ import Spinner from '../Spinner'
 interface ButtonPropsType {
   loading?: boolean
   disabled?: boolean
+  onClick?: () => void
 }
 
 const StyledButton = styled.button`
@@ -37,14 +38,12 @@ const StyledButton = styled.button`
   }
 `
 
-const Button: React.FC<ButtonPropsType> = ({ loading, children, disabled }) => {
-  return <StyledButton disabled={disabled}>{loading ? <Spinner /> : children}</StyledButton>
-}
+const Button: React.FC<ButtonPropsType> = ({ loading, children, disabled, onClick }) => (
+  <StyledButton disabled={disabled} onClick={onClick}>
+    {loading ? <Spinner /> : children}
+  </StyledButton>
+)
 
-// loading -> disabled
-// 로딩이면서 디세이블 될 수 있도록
-// 풀위스랑 아닐 때 구분
-// 스토리북에서 팀 프로바이더 제공
 export default styled(Button)``
 {
   /* <StyledButton disabled={loading || disabled}>{loading ? <Spinner /> : children}</StyledButton> */

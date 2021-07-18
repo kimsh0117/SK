@@ -1,17 +1,28 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Path, UseFormRegister } from 'react-hook-form'
+import { IFormValue } from '../../page/Home'
 
 interface InputPropsType {
-  label?: string
+  label: Path<IFormValue>
+  register: UseFormRegister<IFormValue>
   placeholder?: string
-  error?: boolean
+  error?: any
+  rules?: any
+  // rules?: {
+  //   required?: boolean
+  //   min?: number
+  //   max?: number
+  //   minLength?: number
+  //   maxLength?: number
+  //   pattern?: RegExp
+  // }
 }
-
 const StyledFormGroup = styled.div`
   position: relative;
   width: 100%;
 `
-const StyledInput = styled.input<{ error?: boolean }>`
+const StyledInput = styled.input<{ error?: any }>`
   box-sizing: border-box;
   width: 100%;
   height: 50px;
@@ -35,7 +46,7 @@ const StyledInput = styled.input<{ error?: boolean }>`
     transition: border-color 0.3s ease-in-out;
   }
 `
-const StyledLabel = styled.label<{ error?: boolean }>`
+const StyledLabel = styled.label<{ error?: any }>`
   position: absolute;
   top: -6px;
   left: 12px;
@@ -52,25 +63,18 @@ const StyledLabel = styled.label<{ error?: boolean }>`
     transition: color 0.3s ease-in-out;
   }
 `
-const StyledErrorMessage = styled.div`
-  font-family: ${props => props.theme.fontFamily.sans[15]};
-  font-weight: ${props => props.theme.fontWeight.normal};
-  padding: 0 ${props => props.theme.spacing[4]};
-  font-size: ${props => props.theme.fontSize.xs[0]};
-  color: ${props => props.theme.colors.error};
-  margin-top: ${props => props.theme.spacing[2]};
-`
 
-const Input: React.FC<InputPropsType> = ({ label, placeholder, error }) => {
+const Input: React.FC<InputPropsType> = ({ label, placeholder, error, register, rules }) => {
   return (
     <StyledFormGroup>
-      <StyledInput placeholder={placeholder} error={error}></StyledInput>
+      <StyledInput
+        placeholder={placeholder}
+        error={error}
+        {...register(label, rules)}
+      ></StyledInput>
       <StyledLabel error={error}>{label}</StyledLabel>
-      {error && <StyledErrorMessage>Обязательное поле</StyledErrorMessage>}
     </StyledFormGroup>
   )
 }
 
 export default styled(Input)``
-
-// error 로 분기문이 정녕 이 방법 밖에 없는 것인가.

@@ -1,12 +1,12 @@
 @font-face {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Open Sans';
   font-style: normal;
   font-weight: 400;
   /* safari, iOS, Android */
   src: url('./styles/fonts/OpenSans-Regular.ttf') format('truetype');
 }
 @font-face {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'Open Sans';
   font-style: normal;
   font-weight: 600;
   /* safari, iOS, Android */
