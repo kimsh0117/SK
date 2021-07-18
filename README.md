@@ -50,7 +50,7 @@ SK Design front-end test.
 ## Deploy
 
 Deployed on Netlify<br>
-[SK Design]() <- click here
+[SK Design](https://sk-design.netlify.app/) <- click here
 
 ## Available Scripts
 
