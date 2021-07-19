@@ -198,8 +198,8 @@ const Home: React.FC = () => {
               name='name'
               register={register}
               rules={{
-                required: { value: true, message: 'поля должна не пустое' },
-                minLength: { value: 2, message: 'поле имеет 2 или более символов' },
+                required: { value: true, message: 'поле должно быть не пустое' },
+                minLength: { value: 2, message: 'поле должно имеет 2 или более символов' },
               }}
               error={errors.name ? true : false}
             ></Input>
@@ -211,10 +211,10 @@ const Home: React.FC = () => {
               register={register}
               error={errors.phone ? true : false}
               rules={{
-                required: { value: true, message: 'поля должна не пустое' },
+                required: { value: true, message: 'поле должно быть не пустое' },
                 pattern: {
                   value: /^(\s*)?(\+)?([- _():=+]?\d[- _():=+]?){10,14}(\s*)?$/,
-                  message: 'номер заполнен корректно и полностью',
+                  message: 'номер должен быть заполнен корректно и полностью',
                 },
               }}
             ></Input>
@@ -248,11 +248,11 @@ const Home: React.FC = () => {
               register={register}
               error={errors.email ? true : false}
               rules={{
-                required: { value: true, message: 'поля должна не пустое' },
+                required: { value: true, message: 'поле должно быть не пустое' },
                 pattern: {
                   value:
                     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
-                  message: 'заполнен корректно и полностью',
+                  message: 'email должен быть заполнен корректно и полностью',
                 },
               }}
             ></Input>
@@ -264,8 +264,8 @@ const Home: React.FC = () => {
               error={errors.link ? true : false}
               register={register}
               rules={{
-                required: { value: true, message: 'поля должна не пустое' },
-                minLength: { value: 3, message: 'поле имеет 3 или более символов' },
+                required: { value: true, message: 'поле должно быть не пустое' },
+                minLength: { value: 3, message: 'поле должно имеет 3 или более символов' },
               }}
             ></Input>
             <div>
@@ -299,7 +299,9 @@ const Home: React.FC = () => {
               error={errors.city ? true : false}
             ></DropdownBtn>
             {/* -City- "поле не пустое" Error Message */}
-            {errors.city?.type === 'required' && <ErrorMessage>поля должна не пустое</ErrorMessage>}
+            {errors.city?.type === 'required' && (
+              <ErrorMessage>поле должно быть не пустое</ErrorMessage>
+            )}
             {isCitiesListOpen && (
               <Menu>
                 {cities.map((city, index) => (
@@ -325,7 +327,7 @@ const Home: React.FC = () => {
             register={register}
           ></Input>
           <AdditionalField onClick={() => OpenAdditionalField(!isAdditionalFieldOpen)}>
-            Показать дополнительные поля
+            {isAdditionalFieldOpen ? 'Скрыть дополнительные поля' : 'Показать дополнительные поля'}
             <StyledArrow src={arrow} isListOpen={isAdditionalFieldOpen}></StyledArrow>
           </AdditionalField>
           {isAdditionalFieldOpen && (
