@@ -15,14 +15,14 @@ import arrow from '../assets/image/down_arrow.png'
 import logo from '../assets/image/logo.png'
 
 export interface IFormValue {
-  'Ваше имя *': string
-  'Номер телефона *': string
-  'E-mail *': string
-  'Ссылка на профиль *': string
-  'Выберите город *': string
-  'Название организации/студии': string
-  Получатель: string
-  'От куда узнали про нас?': string
+  name: string
+  phone: string
+  email: string
+  link: string
+  city: string
+  organization: string
+  recipient: string
+  where: string
 }
 
 // container
@@ -139,7 +139,7 @@ const Home: React.FC = () => {
   const [isSourceListOpen, OpenSourceList] = useState(false)
 
   useEffect(() => {
-    register('Выберите город *', {
+    register('city', {
       required: true,
     })
   }, [register])
@@ -150,14 +150,14 @@ const Home: React.FC = () => {
       .unwrap()
       .then(() => {
         reset({
-          'Ваше имя *': '',
-          'Номер телефона *': '',
-          'E-mail *': '',
-          'Ссылка на профиль *': '',
-          'Выберите город *': '',
-          'Название организации/студии': '',
-          Получатель: '',
-          'От куда узнали про нас?': '',
+          name: '',
+          phone: '',
+          email: '',
+          link: '',
+          city: '',
+          organization: '',
+          recipient: '',
+          where: '',
         })
       })
   }
@@ -195,19 +195,21 @@ const Home: React.FC = () => {
             <Input
               placeholder='Иван'
               label='Ваше имя *'
+              name='name'
               register={register}
               rules={{
                 required: { value: true, message: 'поля должна не пустое' },
                 minLength: { value: 2, message: 'поле имеет 2 или более символов' },
               }}
-              error={errors['Ваше имя *']?.message}
+              error={errors.name ? true : false}
             ></Input>
             {/* Phone Number Field */}
             <Input
               placeholder='+7 (000) 000-00-00'
               label='Номер телефона *'
+              name='phone'
               register={register}
-              error={errors['Номер телефона *']?.message}
+              error={errors.phone ? true : false}
               rules={{
                 required: { value: true, message: 'поля должна не пустое' },
                 pattern: {
@@ -218,22 +220,22 @@ const Home: React.FC = () => {
             ></Input>
             <div>
               {/* -Name- "поле не пустое" Error Message */}
-              {errors['Ваше имя *']?.type === 'required' && (
-                <ErrorMessage>{errors['Ваше имя *']?.message}</ErrorMessage>
+              {errors.name?.type === 'required' && (
+                <ErrorMessage>{errors.name?.message}</ErrorMessage>
               )}
               {/* -Name- "поле имеет 2 или более символов" Error Message */}
-              {errors['Ваше имя *']?.type === 'minLength' && (
-                <ErrorMessage>{errors['Ваше имя *']?.message}</ErrorMessage>
+              {errors.name?.type === 'minLength' && (
+                <ErrorMessage>{errors.name?.message}</ErrorMessage>
               )}
             </div>
             <div>
               {/* -Phone-  "поле не пустое" Error Message */}
-              {errors['Номер телефона *']?.type === 'required' && (
-                <ErrorMessage>{errors['Номер телефона *']?.message}</ErrorMessage>
+              {errors.phone?.type === 'required' && (
+                <ErrorMessage>{errors.phone?.message}</ErrorMessage>
               )}
               {/* -Phone-  "номер заполнен корректно и полностью" Error Message */}
-              {errors['Номер телефона *']?.type === 'pattern' && (
-                <ErrorMessage>{errors['Номер телефона *']?.message}</ErrorMessage>
+              {errors.phone?.type === 'pattern' && (
+                <ErrorMessage>{errors.phone?.message}</ErrorMessage>
               )}
             </div>
           </TwoColumnTwoRow>
@@ -242,8 +244,9 @@ const Home: React.FC = () => {
             <Input
               placeholder='example@skdesign.ru'
               label='E-mail *'
+              name='email'
               register={register}
-              error={errors['E-mail *']?.message}
+              error={errors.email ? true : false}
               rules={{
                 required: { value: true, message: 'поля должна не пустое' },
                 pattern: {
@@ -257,7 +260,8 @@ const Home: React.FC = () => {
             <Input
               placeholder='instagram.com/skdesign'
               label='Ссылка на профиль *'
-              error={errors['Ссылка на профиль *']?.message}
+              name='link'
+              error={errors.link ? true : false}
               register={register}
               rules={{
                 required: { value: true, message: 'поля должна не пустое' },
@@ -266,22 +270,22 @@ const Home: React.FC = () => {
             ></Input>
             <div>
               {/* -Email- "поле не пустое" Error Message */}
-              {errors['E-mail *']?.type === 'required' && (
-                <ErrorMessage>{errors['E-mail *']?.message}</ErrorMessage>
+              {errors.email?.type === 'required' && (
+                <ErrorMessage>{errors.email?.message}</ErrorMessage>
               )}
               {/* -Email- "заполнен корректно и полностью" Error Message */}
-              {errors['E-mail *']?.type === 'pattern' && (
-                <ErrorMessage>{errors['E-mail *']?.message}</ErrorMessage>
+              {errors.email?.type === 'pattern' && (
+                <ErrorMessage>{errors.email?.message}</ErrorMessage>
               )}
             </div>
             <div>
               {/* -Profile Link- "поле не пустое" Error Message */}
-              {errors['Ссылка на профиль *']?.type === 'required' && (
-                <ErrorMessage>{errors['Ссылка на профиль *']?.message}</ErrorMessage>
+              {errors.link?.type === 'required' && (
+                <ErrorMessage>{errors.link?.message}</ErrorMessage>
               )}
               {/* -Profile Link- "поле имеет 3 или более символов" Error Message */}
-              {errors['Ссылка на профиль *']?.type === 'minLength' && (
-                <ErrorMessage>{errors['Ссылка на профиль *']?.message}</ErrorMessage>
+              {errors.link?.type === 'minLength' && (
+                <ErrorMessage>{errors.link?.message}</ErrorMessage>
               )}
             </div>
           </TwoColumnTwoRow>
@@ -290,22 +294,20 @@ const Home: React.FC = () => {
             <DropdownBtn
               label='Выберите город *'
               isListOpen={isCitiesListOpen}
-              selected={getValues('Выберите город *')}
+              selected={getValues('city')}
               onClick={() => OpenCitiesList(!isCitiesListOpen)}
-              error={errors['Выберите город *']?.message}
+              error={errors.city ? true : false}
             ></DropdownBtn>
             {/* -City- "поле не пустое" Error Message */}
-            {errors['Выберите город *']?.type === 'required' && (
-              <ErrorMessage>поля должна не пустое</ErrorMessage>
-            )}
+            {errors.city?.type === 'required' && <ErrorMessage>поля должна не пустое</ErrorMessage>}
             {isCitiesListOpen && (
               <Menu>
                 {cities.map((city, index) => (
                   <MenuItem
                     key={index}
                     onClick={() => {
-                      setValue('Выберите город *', city.name)
-                      trigger('Выберите город *')
+                      setValue('city', city.name)
+                      trigger('city')
                       OpenCitiesList(!isCitiesListOpen) // close drop down
                     }}
                   >
@@ -318,6 +320,7 @@ const Home: React.FC = () => {
           {/* Organization */}
           <Input
             label='Название организации/студии'
+            name='organization'
             placeholder='SK Design'
             register={register}
           ></Input>
@@ -328,7 +331,12 @@ const Home: React.FC = () => {
           {isAdditionalFieldOpen && (
             <div style={{ marginBottom: '25px' }}>
               {/* Recipient */}
-              <Input label='Получатель' placeholder='ФИО' register={register}></Input>
+              <Input
+                label='Получатель'
+                name='recipient'
+                placeholder='ФИО'
+                register={register}
+              ></Input>
             </div>
           )}
           {isAdditionalFieldOpen && (
@@ -337,7 +345,7 @@ const Home: React.FC = () => {
               <DropdownBtn
                 label='От куда узнали про нас?'
                 isListOpen={isSourceListOpen}
-                selected={getValues('От куда узнали про нас?')}
+                selected={getValues('where')}
                 onClick={() => OpenSourceList(!isSourceListOpen)}
               ></DropdownBtn>
               {isSourceListOpen && (
@@ -346,7 +354,7 @@ const Home: React.FC = () => {
                     <MenuItem
                       key={index}
                       onClick={() => {
-                        setValue('От куда узнали про нас?', source)
+                        setValue('where', source)
                         OpenSourceList(!isSourceListOpen)
                       }}
                     >
@@ -366,4 +374,3 @@ const Home: React.FC = () => {
   )
 }
 export default Home
-// 에러시 라벨 색 제대로 렌더링 되도록 고치기

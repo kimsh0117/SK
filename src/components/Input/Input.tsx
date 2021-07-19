@@ -4,19 +4,12 @@ import { Path, UseFormRegister } from 'react-hook-form'
 import { IFormValue } from '../../page/Home'
 
 interface InputPropsType {
-  label: Path<IFormValue>
+  label: string
   register: UseFormRegister<IFormValue>
   placeholder?: string
-  error?: any
+  error?: boolean
   rules?: any
-  // rules?: {
-  //   required?: boolean
-  //   min?: number
-  //   max?: number
-  //   minLength?: number
-  //   maxLength?: number
-  //   pattern?: RegExp
-  // }
+  name: Path<IFormValue>
 }
 const StyledFormGroup = styled.div`
   position: relative;
@@ -58,19 +51,23 @@ const StyledLabel = styled.label<{ error?: any }>`
   letter-spacing: 0.25px;
 
   ${StyledInput}:focus + & {
-    color: ${props =>
-      props.error ? props.theme.colors.error : props.theme.colors.primary.default};
+    color: ${props => props.theme.colors.primary.default};
+    transition: color 0.3s ease-in-out;
+  }
+  ${StyledInput}[aria-invalid='true']:focus + & {
+    color: ${props => props.theme.colors.error};
     transition: color 0.3s ease-in-out;
   }
 `
 
-const Input: React.FC<InputPropsType> = ({ label, placeholder, error, register, rules }) => {
+const Input: React.FC<InputPropsType> = ({ label, placeholder, error, register, rules, name }) => {
   return (
     <StyledFormGroup>
       <StyledInput
+        aria-invalid={error}
         placeholder={placeholder}
         error={error}
-        {...register(label, rules)}
+        {...register(name, rules)}
       ></StyledInput>
       <StyledLabel error={error}>{label}</StyledLabel>
     </StyledFormGroup>
